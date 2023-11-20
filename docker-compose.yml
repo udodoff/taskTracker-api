@@ -1,0 +1,37 @@
+version: '3.7'
+services:
+  postgres:
+    image: postgres:14
+    container_name: postgres_todo
+    ports:
+      - 127.0.0.1:5432:5432
+    environment:
+      POSTGRES_DB: postgres_todo
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/var/www/todo/docker-volumes/postgres
+    networks:
+      - todo
+    restart: unless-stopped
+  todo_pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_todo
+    ports:
+      - 127.0.0.1:5050:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: udodovr03@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: root
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/www/todo/docker-volumes/pgadmin
+    networks:
+      - todo
+    restart: unless-stopped
+networks:
+  todo:
+    driver: bridge
+volumes:
+  postgres:
+  pgadmin:
