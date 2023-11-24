@@ -8,7 +8,7 @@ import {
   Delete,
   Query,
 } from '@nestjs/common';
-import { AuthGuard } from '@auth/auth.guard';
+import { JwtAuthGuard } from '@auth/auth.guard';
 import { TaskService } from './task.service';
 import { ICreateTask } from './types';
 
@@ -16,7 +16,7 @@ import { ICreateTask } from './types';
 export class TaskController {
   constructor(private taskService: TaskService) {}
 
-  @UseGuards(AuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('create')
   async createTask(@Body() createTaskDto: ICreateTask) {
     try {
@@ -27,7 +27,7 @@ export class TaskController {
     }
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Delete(':taskId')
   async deleteTask(@Param('taskId') taskId: number) {
     try {
@@ -38,7 +38,7 @@ export class TaskController {
     }
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('update')
   async updateTask(@Body() createTaskDto: ICreateTask) {
     try {
@@ -49,13 +49,13 @@ export class TaskController {
     }
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get()
   getTasksByUserId(@Query() { userId }: { userId: number }) {
     return this.taskService.getTasksByUserId(userId);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('children')
   async getChildrenTree(@Query() { parentTask }: { parentTask: number }) {
     try {

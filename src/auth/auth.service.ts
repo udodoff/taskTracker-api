@@ -42,13 +42,22 @@ export class AuthService {
     };
   }
 
-  async signUp(login: string, pass: string): Promise<User> {
+  async signUp(login: string, pass: string): Promise<ISignInInfo> {
     const user = await this.userService.findOne(login);
     if (user) {
       throw new UnauthorizedException();
     }
     const hashedPass = await hash(pass);
-    return await this.userService.create(login, hashedPass);
+    const newUser = await this.userService.create(login, hashedPass);
+    const payload = { sub: newUser.id, login: newUser.login };
+
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+      user: {
+        userId: newUser.id,
+        login: newUser.login,
+      },
+    };
   }
 
   async getAllUsers(): Promise<User[]> {
